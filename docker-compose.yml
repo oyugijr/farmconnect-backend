@@ -7,7 +7,7 @@ services:
       - "4000:4000"
       - "8080:8080"
     environment:
-      - DATABASE_URL=postgresql://postgres:Oyugi222f@postgres:5433/farmconnect?schema=public
+      - DATABASE_URL=postgresql://postgres:Oyugi222f@localhost:5433/farmconnect?schema=public
       - JWT_SECRET=your_jwt_secret
       - TWILIO_SID=your_twilio_sid
       - TWILIO_AUTH_TOKEN=your_twilio_token
