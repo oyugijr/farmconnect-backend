@@ -7,8 +7,8 @@ on:
     branches: [main]
 
 env:
-  DATABASE_URL: dotenv.DATABASE_URL
-  TWILIO_SID: dotenv.TWILIO_SID
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  TWILIO_SID: ${{ secrets.TWILIO_SID }}
   JWT_SECRET: dotenv.JWT_SECRET
   NODE_ENV: test
 
@@ -19,9 +19,9 @@ jobs:
       postgres:
         image: postgres:13-alpine
         env:
-          DATABASE_URL: postgresql://postgres:Oyugi222f@db:5433/farmconnect?schema=public
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: Oyugi222f
+          POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
           POSTGRES_DB: farmconnect
         ports:
           - 5433:5433
@@ -39,7 +39,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: "18"
-          cache: "npm"
+          # cache: "npm"
 
       - name: Install dependencies
         run: npm ci
