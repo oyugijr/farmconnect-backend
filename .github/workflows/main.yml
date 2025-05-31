@@ -19,7 +19,7 @@ jobs:
       postgres:
         image: postgres:13-alpine
         env:
-          DATABASE_URL: dotenv.DATABASE_URL
+          DATABASE_URL: postgresql://postgres:Oyugi222f@db:5433/farmconnect?schema=public
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: Oyugi222f
           POSTGRES_DB: farmconnect
