@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    ports:
+      - "4000:4000"
+      - "8080:8080"
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/farmconnect?schema=public
+      - JWT_SECRET=your_jwt_secret
+      - TWILIO_SID=your_twilio_sid
+      - TWILIO_AUTH_TOKEN=your_twilio_token
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+  db:
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: farmconnect
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:

@@ -1,0 +1,27 @@
+{
+  "name": "farmconnect-backend",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "oyugijr",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.8.2",
+    "@types/joi": "^17.2.2",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "prisma": "^6.8.2",
+    "twilio": "^5.6.1",
+    "winston": "^3.17.0",
+    "ws": "^8.18.2"
+  }
+}
