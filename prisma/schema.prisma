@@ -1,10 +1,13 @@
 generator client {
     provider = "prisma-client-js"
+    previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
     provider = "postgresql"
-    url      = env("DATABASE_URL")
+    // url      = env("DATABASE_URL")
+    url = env("NEON_POOLED_URL") // use Neon Pooled URL for connection
+    extensions = [citext, uuid_ossp] // Neon supported extensions
 }
 
 model User {
