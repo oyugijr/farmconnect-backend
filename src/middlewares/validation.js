@@ -1,5 +1,6 @@
 import Joi from 'joi';
 import ApiError from '../utils/apiError.js';
+import { PRODUCT_TYPES } from '../config/constants.js';
 
 export const validateRegistration = (req, res, next) => {
   const schema = Joi.object({

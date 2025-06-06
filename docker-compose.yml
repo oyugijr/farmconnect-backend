@@ -3,36 +3,24 @@ version: "3.8"
 services:
   app:
     build: .
+    environment:
+      - DATABASE_URL=${NEON_DATABASE_URL}
+      - NEON_POOLED_URL=${NEON_POOLED_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - TWILIO_SID=${TWILIO_SID}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+      - REDIS_URL=redis://redis:6379
     ports:
       - "4000:4000"
-      - "8080:8080"
-    environment:
-      - DATABASE_URL=postgresql://postgres:Oyugi222f@localhost:5433/farmconnect?schema=public
-      - JWT_SECRET=your_jwt_secret
-      - TWILIO_SID=your_twilio_sid
-      - TWILIO_AUTH_TOKEN=your_twilio_token
     depends_on:
-      db:
-        condition: service_healthy
-    volumes:
-      - .:/app
-      - /app/node_modules
+      - redis
 
-  db:
-    image: postgres:13-alpine
-    env:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Oyugi222f
-      POSTGRES_DB: farmconnect
+  redis:
+    image: redis:alpine
     ports:
-      - "5433:5433"
+      - "6379:6379"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - redis_data:/data
 
 volumes:
-  postgres_data:
+  redis_data:

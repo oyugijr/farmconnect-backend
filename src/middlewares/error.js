@@ -8,6 +8,10 @@ export const errorHandler = (err, req, res, next) => {
 
   res.status(err.statusCode).json({
     status: err.status,
-    message: err.message
+    message: err.message,
+    ...(process.env.NODE_ENV === 'development' && {
+      stack: err.stack,
+      error: err
+    })
   });
 };

@@ -1,7 +1,9 @@
-const twilio = require('twilio');
-const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
+import twilio from 'twilio';
+import logger from '../utils/logger.js';
 
-const sendWhatsAppMessage = async (to, message) => {
+const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
+
+export const sendWhatsAppMessage = async (to, message) => {
   try {
     await client.messages.create({
       body: message,

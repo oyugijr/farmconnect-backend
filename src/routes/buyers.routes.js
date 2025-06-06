@@ -1,9 +1,15 @@
 import express from 'express';
-import { getVerifiedBuyers } from '../controllers/buyers.controller.js';
 import { authenticate } from '../middlewares/auth.js';
+import { 
+  getVerifiedBuyers,
+  logBuyerContact
+} from '../controllers/buyers.controller.js';
 
 const router = express.Router();
 
-router.get('/', authenticate, getVerifiedBuyers);
+router.use(authenticate);
+
+router.get('/', getVerifiedBuyers);
+router.post('/contact', logBuyerContact);
 
 export default router;

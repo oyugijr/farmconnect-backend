@@ -1,3 +1,19 @@
+export const PRODUCT_TYPES = [
+  'tomatoes',
+  'maize',
+  'beans',
+  'potatoes',
+  'kales',
+  'onions',
+  'carrots'
+];
+
+export const MARKET_TRENDS = {
+  RISING: 'rising',
+  FALLING: 'falling',
+  STABLE: 'stable'
+};
+
 export const ERROR_MESSAGES = {
   UNAUTHORIZED: 'Authentication required',
   FORBIDDEN: 'Insufficient permissions',
@@ -5,8 +21,3 @@ export const ERROR_MESSAGES = {
   INVALID_INPUT: 'Invalid input data',
   SERVER_ERROR: 'Internal server error'
 };
-
-export const PRODUCT_TYPES = [
-  'tomatoes', 'maize', 'beans', 
-  'potatoes', 'kales', 'onions', 'carrots'
-];

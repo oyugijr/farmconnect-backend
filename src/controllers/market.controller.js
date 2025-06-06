@@ -19,10 +19,7 @@ export const getMarketPrices = async (req, res, next) => {
 
     const processedData = await analyzeMarketTrends(prices, location);
 
-    res.status(200).json({
-      status: 'success',
-      data: processedData
-    });
+    res.status(200).json(processedData);
   } catch (error) {
     next(error);
   }

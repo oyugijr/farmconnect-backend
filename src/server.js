@@ -1,17 +1,16 @@
 import app from './app.js';
 import prisma from './config/database.js';
-import logger from './utils/logger.js';
 
 const PORT = process.env.PORT || 4000;
 
 prisma.$connect()
   .then(() => {
-    logger.info('Database connected');
+    console.log('Database connected');
     app.listen(PORT, () => {
-      logger.info(`Server running on port ${PORT}`);
+      console.log(`Server running on port ${PORT}`);
     });
   })
   .catch((error) => {
-    logger.error('Failed to connect to database:', error);
+    console.error('Database connection error:', error);
     process.exit(1);
   });

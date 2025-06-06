@@ -1,4 +1,4 @@
-name: FarmConnect CI/CD
+name: FarmConnect CI/CD Pipeline
 
 on:
   push:
@@ -7,39 +7,28 @@ on:
     branches: [main]
 
 env:
-  DATABASE_URL: ${{ secrets.DATABASE_URL }}
-  TWILIO_SID: ${{ secrets.TWILIO_SID }}
-  JWT_SECRET: dotenv.JWT_SECRET
   NODE_ENV: test
+  DATABASE_URL: ${{ secrets.NEON_DATABASE_URL }}
+  NEON_POOLED_URL: ${{ secrets.NEON_POOLED_URL }}
+  JWT_SECRET: ${{ secrets.JWT_SECRET }}
+  TWILIO_SID: ${{ secrets.TWILIO_SID }}
+  TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
 
 jobs:
   build-and-test:
+    name: Build and Test
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:13-alpine
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
-          POSTGRES_DB: farmconnect
-        ports:
-          - 5433:5433
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+    timeout-minutes: 10
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: "18"
-          # cache: "npm"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -49,36 +38,62 @@ jobs:
 
       - name: Run database migrations
         run: npx prisma migrate deploy
-        # env:
-          # DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       - name: Run tests
         run: npm test
+        env:
+          DATABASE_URL: ${{ secrets.NEON_TEST_DATABASE_URL }}
+
+      - name: Build application
+        run: npm run build
+
+      - name: Upload test coverage
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage/lcov.info
+          flags: unittests
 
   deploy:
+    name: Deploy to Production
     needs: build-and-test
-    runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: "18"
 
       - name: Install dependencies
         run: npm ci --omit=dev
 
-      - name: Build project
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Run database migrations
+        run: npx prisma migrate deploy
+
+      - name: Build application
         run: npm run build
 
-    # - name: Deploy to Heroku
-    #   uses: akhileshns/heroku-deploy@v3.12.12
-    #   with:
-    #     heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-    #     heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
-    #     heroku_email: ${{ secrets.HEROKU_EMAIL }}
-    #     usedocker: true
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: ./
+          vercel-args: "--prod"
+
+      - name: Notify Slack on success
+        if: success()
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          slack-message: "FarmConnect backend deployed successfully to production"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

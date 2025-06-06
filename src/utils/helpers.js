@@ -14,3 +14,7 @@ export const verifyToken = (token) => {
     throw new ApiError(401, 'Invalid token');
   }
 };
+
+export const capitalizeFirst = (str) => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};

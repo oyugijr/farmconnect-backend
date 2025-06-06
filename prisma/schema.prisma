@@ -1,13 +1,12 @@
 generator client {
-    provider = "prisma-client-js"
+    provider        = "prisma-client-js"
     previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-    provider = "postgresql"
-    // url      = env("DATABASE_URL")
-    url = env("NEON_POOLED_URL") // use Neon Pooled URL for connection
-    extensions = [citext, uuid_ossp] // Neon supported extensions
+    provider   = "postgresql"
+    url        = env("NEON_POOLED_URL")
+    extensions = [pgcrypto, uuid_ossp]
 }
 
 model User {
@@ -15,7 +14,7 @@ model User {
     name           String
     location       String
     primaryProduce String
-    targetPrice    Float     @default(45.0)
+    targetPrice    Float?
     phone          String?   @unique
     createdAt      DateTime  @default(now())
     updatedAt      DateTime  @updatedAt
@@ -37,7 +36,7 @@ model MarketPrice {
     product    String
     price      Float
     market     String
-    trend      String // rising, falling, stable
+    trend      String
     change     Float
     recordedAt DateTime @default(now())
 }

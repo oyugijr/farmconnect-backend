@@ -23,3 +23,24 @@ export const getVerifiedBuyers = async (req, res, next) => {
     next(error);
   }
 };
+
+export const logBuyerContact = async (req, res, next) => {
+  try {
+    const { buyerPhone } = req.body;
+    
+    await prisma.contact.create({
+      data: {
+        buyerPhone,
+        farmerId: req.user.id,
+        contactedAt: new Date()
+      }
+    });
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Contact logged successfully'
+    });
+  } catch (error) {
+    next(error);
+  }
+};

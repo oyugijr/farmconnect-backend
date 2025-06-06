@@ -1,5 +1,5 @@
+import jwt from 'jsonwebtoken';
 import ApiError from '../utils/apiError.js';
-import { verifyToken } from '../utils/helpers.js';
 import prisma from '../config/database.js';
 
 export const authenticate = async (req, res, next) => {
@@ -10,10 +10,10 @@ export const authenticate = async (req, res, next) => {
     }
 
     if (!token) {
-      throw new ApiError(401, 'Please log in to access this resource');
+      throw new ApiError(401, ERROR_MESSAGES.UNAUTHORIZED);
     }
 
-    const decoded = verifyToken(token);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const currentUser = await prisma.user.findUnique({
       where: { id: decoded.sub }
     });

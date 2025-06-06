@@ -1,9 +1,15 @@
-const express = require('express');
+import express from 'express';
+import { authenticate } from '../middlewares/auth.js';
+import { 
+  getMarketPrices, 
+  refreshMarketData 
+} from '../controllers/market.controller.js';
+
 const router = express.Router();
-const { getMarketPrices, refreshMarketData } = require('../controllers/market.controller');
-const authMiddleware = require('../middlewares/auth');
 
-router.get('/prices', authMiddleware, getMarketPrices);
-router.post('/refresh', authMiddleware, refreshMarketData);
+router.use(authenticate);
 
-module.exports = router;
+router.get('/prices', getMarketPrices);
+router.post('/refresh', refreshMarketData);
+
+export default router;
