@@ -34,7 +34,7 @@ Farmconnect Backend is a RESTful API designed to facilitate the management of fa
 ### Prerequisites
 
 - Node.js (version 14 or higher)
-- PostgreSQL (version 12 or higher)
+- Neon PostgreSQL (version 12 or higher)
 - npm (Node package manager)
 - Docker (optional, for containerization)
 
@@ -78,8 +78,11 @@ Farmconnect Backend is a RESTful API designed to facilitate the management of fa
 
 To run the unit tests, use the following command:
 
-```bash 
-npm test
+```bash
+npm test        # Run all tests
+npm run test:unit  # Run only unit tests
+npm run test:integration  # Run only integration tests
+npm run test:coverage  # Run with coverage report
 ```
 
 ## Key Features:
