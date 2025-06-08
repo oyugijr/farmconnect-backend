@@ -5,5 +5,6 @@ beforeEach(async () => {
 });
 
 afterAll(async () => {
-  // Cleanup any resources
+    // Cleanup any resources
+    await resetDatabase();
 });
